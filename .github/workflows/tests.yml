@@ -32,7 +32,7 @@ jobs:
       - name: Run tests
         working-directory: MP1
         run: |
-          python tests.py
+          python -u tests.py
 
       - name: Save tests
         uses: actions/upload-artifact@v4
