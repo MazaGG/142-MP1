@@ -19,7 +19,7 @@ jobs:
           path: 142-MP1
 
       - name: Set up Python 3.10
-        uses: actions/setup-python@v3
+        uses: actions/setup-python@v5
         with:
           python-version: "3.10"
           
@@ -35,7 +35,7 @@ jobs:
           python tests.py
 
       - name: Save tests
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: test-results
           path: 142-MP1/results.txt
