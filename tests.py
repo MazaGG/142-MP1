@@ -5,7 +5,6 @@ from algorithms.dynamic import tsp_dynamic
 from tabulate import tabulate
 import numpy as np
 import time
-import os
 
 # Generate a set of test distance matrices
 cities = (np.random.randint(0, 100, (30, 2)))

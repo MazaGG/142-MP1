@@ -16,7 +16,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           repository: MazaGG/142-MP1
-          path: 142-MP1
+          path: MP1
 
       - name: Set up Python 3.10
         uses: actions/setup-python@v5
@@ -24,20 +24,20 @@ jobs:
           python-version: "3.10"
           
       - name: Install dependencies
-        working-directory: 142-MP1
+        working-directory: MP1
         run: |
           python -m pip install --upgrade pip
           if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
 
       - name: Run tests
-        working-directory: 142-MP1
-        run: 
+        working-directory: MP1
+        run: |
           python tests.py
 
       - name: Save tests
         uses: actions/upload-artifact@v4
         with:
           name: test-results
-          path: 142-MP1/results.txt
+          path: MP1/results.txt
 
           
