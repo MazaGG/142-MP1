@@ -24,12 +24,12 @@ D = np.round(np.linalg.norm(cities[:, np.newaxis] - cities[np.newaxis, :], axis=
 # Test Dynamic Programming
 print("\nDynamic Programming\n")
 dynamic_results = []
-for i in range(4,30):
+for i in range(4,25):
   start = time.time()
   cost, path = tsp_dynamic(D[:i+1, :i+1])
   end = time.time()
   dynamic_results.append([i+1, end-start, cost, path]) 
-print(tabulate(dynamic_results, headers=["N", "Runtime", "Cost", "Path"], tablefmt="simple"))
+  print(f"N={i+1}, Runtime={end-start:.6f}s, Cost={cost}, Path={path}")
 print("\n")
 
 # Test Greedy Algorithm
