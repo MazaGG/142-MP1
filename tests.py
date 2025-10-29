@@ -24,7 +24,7 @@ D = np.round(np.linalg.norm(cities[:, np.newaxis] - cities[np.newaxis, :], axis=
 # Test Dynamic Programming
 print("\nDynamic Programming\n")
 dynamic_results = []
-for i in range(4,25):
+for i in range(4,27):
   start = time.time()
   cost, path = tsp_dynamic(D[:i+1, :i+1])
   end = time.time()
