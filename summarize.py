@@ -2,7 +2,7 @@ import numpy as np
 import glob
 
 # Find all test result files
-files = sorted(glob.glob("results/test*-results.txt"))
+files = sorted(glob.glob("results/**/results.txt", recursive=True))
 print("Found files:", files)
 
 # Function to extract result sections from file
