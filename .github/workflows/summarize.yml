@@ -19,10 +19,38 @@ jobs:
         with:
           python-version: "3.11"
 
-      - name: Download all artifacts
-        uses: actions/download-artifact@v4
+      - name: Download test 1 results
+        uses: dawidd6/action-download-artifact@v3
         with:
-          path: results/
+          github_token: ${{ secrets.TESTER_PAT }}
+          repo: ${{ github.repository }}
+          workflow: test1.yaml
+          workflow_conclusion: success
+          allow_forks: true
+          name: test1-results
+          path: results
+      
+      - name: Download test 2 results
+        uses: dawidd6/action-download-artifact@v3
+        with:
+          github_token: ${{ secrets.TESTER_PAT }}
+          repo: ${{ github.repository }}
+          workflow: test2.yaml
+          workflow_conclusion: success
+          allow_forks: true
+          name: test2-results
+          path: results
+      
+      - name: Download test 3 results
+        uses: dawidd6/action-download-artifact@v3
+        with:
+          github_token: ${{ secrets.TESTER_PAT }}
+          repo: ${{ github.repository }}
+          workflow: test3.yaml
+          workflow_conclusion: success
+          allow_forks: true
+          name: test3-results
+          path: results
 
       - name: List results folder
         run: |
