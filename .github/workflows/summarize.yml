@@ -24,7 +24,7 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           repo: ${{ github.repository }}
-          workflow: test1.yaml
+          workflow: test1.yml
           workflow_conclusion: success
           allow_forks: true
           name: test1-results
@@ -35,7 +35,7 @@ jobs:
         with:
           github_token: ${{ secrets.TESTER_PAT }}
           repo: ${{ github.repository }}
-          workflow: test2.yaml
+          workflow: test2.yml
           workflow_conclusion: success
           allow_forks: true
           name: test2-results
@@ -46,7 +46,7 @@ jobs:
         with:
           github_token: ${{ secrets.TESTER_PAT }}
           repo: ${{ github.repository }}
-          workflow: test3.yaml
+          workflow: test3.yml
           workflow_conclusion: success
           allow_forks: true
           name: test3-results
