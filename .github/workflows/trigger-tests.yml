@@ -16,18 +16,21 @@ jobs:
         uses: peter-evans/repository-dispatch@v3
         with:
           repository: ${{ github.repository }}
+          token: ${{ secrets.GITHUB_TOKEN }}
           event-type: run-test1
 
       - name: Start test case 2
         uses: peter-evans/repository-dispatch@v3
         with:
           repository: ${{ github.repository }}
+          token: ${{ secrets.GITHUB_TOKEN }}
           event-type: run-test2
           
       - name: Start test case 3
         uses: peter-evans/repository-dispatch@v3
         with:
           repository: ${{ github.repository }}
+          token: ${{ secrets.GITHUB_TOKEN }}
           event-type: run-test3
 
           
