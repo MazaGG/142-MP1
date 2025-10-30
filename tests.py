@@ -45,12 +45,22 @@ print("\n")
 
 # Save Results to File
 with open("results.txt", "w") as f:
-  f.write("# Distance Matrix D\n")
-  np.savetxt(f, D, fmt="%d")
-  f.write("\n# Exhaustive Results\n")
-  np.savetxt(f, exhaustive_results, fmt="%.6f")
-  f.write("\n# Dynamic Results\n")
-  np.savetxt(f, dynamic_results, fmt="%.6f")
-  f.write("\n# Greedy Results\n")
-  np.savetxt(f, greedy_results, fmt="%.6f")
+    f.write("# Distance Matrix D\n")
+    np.savetxt(f, D, fmt="%d")
+
+    f.write("\n# Exhaustive Results\n")
+    for row in exhaustive_results:
+        N, runtime, cost, path = row
+        f.write(f"{N} {runtime:.6f} {cost:.6f} {path}\n")
+
+    f.write("\n# Dynamic Results\n")
+    for row in dynamic_results:
+        N, runtime, cost, path = row
+        f.write(f"{N} {runtime:.6f} {cost:.6f} {path}\n")
+
+    f.write("\n# Greedy Results\n")
+    for row in greedy_results:
+        N, runtime, cost, path = row
+        f.write(f"{N} {runtime:.6f} {cost:.6f} {path}\n")
+print("Results saved to results.txt")
 
