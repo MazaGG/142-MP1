@@ -51,19 +51,19 @@ jobs:
           name: test3-results
           path: results/test3-results
 
-      - name: List results folder
-        run: |
-          ls -R results || echo "No results folder found"
+      # - name: List results folder
+      #   run: |
+      #     ls -R results || echo "No results folder found"
 
       - name: Install dependencies
         run: |
           pip install --upgrade pip
           pip install -r requirements.txt
 
-      - name: Debug artifact contents
-        run: |
-          pwd
-          ls -R
+      # - name: Debug artifact contents
+      #   run: |
+      #     pwd
+      #     ls -R
 
       - name: Run summarizer
         run: python summarize.py

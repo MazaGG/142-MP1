@@ -57,6 +57,8 @@ for name, section in sections.items():
 # Generate summary tables
 with open("results.txt", "w") as f:
     wrote_anything = False
+    avg_per_algo = {}
+
     for algo, datasets in algorithm_data.items():
         if not datasets:
             f.write(f"# {algo} Summary\nNo data found.\n\n")
@@ -71,12 +73,38 @@ with open("results.txt", "w") as f:
         runtimes = stacked[:, 1, :]
         avg_runtime = np.mean(runtimes, axis=1)
 
+        avg_per_algo[algo] = np.column_stack((N_values, avg_runtime))
+
         table = np.column_stack((N_values, runtimes, avg_runtime))
         f.write(f"# {algo} Summary\n")
-        np.savetxt(f, table, header="N Test1 Test2 Test3 Average", fmt="%.6f", comments="")
+        np.savetxt(
+            f,
+            table,
+            header="N Test1 Test2 Test3 Average",
+            fmt=["%d", "%.6f", "%.6f", "%.6f", "%.6f"],
+            comments=""
+        )
         f.write("\n\n")
 
-    # If no valid data found at all
+    # Write overall summary (compare average runtimes per algorithm)
+    if avg_per_algo:
+        f.write("# Summary (Average Runtime per Algorithm)\n")
+        N = avg_per_algo["Exhaustive"][:, 0]
+        summary_table = np.column_stack([
+            N,
+            avg_per_algo["Exhaustive"][:, 1],
+            avg_per_algo["Dynamic"][:, 1],
+            avg_per_algo["Greedy"][:, 1]
+        ])
+        np.savetxt(
+            f,
+            summary_table,
+            header="N Exhaustive Dynamic Greedy",
+            fmt=["%d", "%.6f", "%.6f", "%.6f"],
+            comments=""
+        )
+        f.write("\n")
+
     if not wrote_anything:
         f.write("# No valid data found.\n")
 

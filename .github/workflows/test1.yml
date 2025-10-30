@@ -1,9 +1,6 @@
 name: TSP Test 1
+run-name: TSP Test 1
 
-# on:
-#   workflow_run:
-#     workflows: ["Trigger Tests"]
-#     types: [completed]
 on:
   push:
     branches: [ "main" ]
