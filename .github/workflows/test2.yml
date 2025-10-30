@@ -1,0 +1,30 @@
+name: TSP Test 2
+
+on:
+  repository_dispatch:
+    types: [run-test2]
+
+jobs:
+  run-test:
+    runs-on: ubuntu-22.04
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run test script
+        run: python tests.py
+
+      - name: Upload results
+        uses: actions/upload-artifact@v4
+        with:
+          name: test2-results
+          path: results.txt
