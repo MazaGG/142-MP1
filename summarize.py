@@ -23,8 +23,16 @@ def extract_results(filename, section):
         if line.startswith("#"):
             break
         line = line.strip()
-        if line:
-            data.append(list(map(float, line.split())))
+        if not line:
+            continue
+
+        parts = line.split()
+        try:
+            N = int(float(parts[0]))          # number of cities
+            runtime = float(parts[1])          # runtime (second column)
+            data.append([N, runtime])
+        except (ValueError, IndexError):
+            continue
     return np.array(data)
 
 sections = {
