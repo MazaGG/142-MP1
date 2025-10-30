@@ -22,7 +22,7 @@ jobs:
       - name: Download test 1 results
         uses: dawidd6/action-download-artifact@v3
         with:
-          github_token: ${{ secrets.TESTER_PAT }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
           repo: ${{ github.repository }}
           workflow: test1.yaml
           workflow_conclusion: success
