@@ -1,12 +1,9 @@
 name: TSP Test 1
 
 on:
-  repository_dispatch:
-    types: [run-test1]
-
-permissions:
-  contents: read
-  actions: write
+  workflow_run:
+    workflows: ["TSP tests trigger"]
+    types: [completed]
 
 jobs:
   run-test:

@@ -3,8 +3,6 @@ name: TSP tests trigger
 on:
   push:
     branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
 
 jobs:
   trigger_tests:
@@ -12,25 +10,4 @@ jobs:
     runs-on: ubuntu-22.04
 
     steps:
-      - name: Start test case 1
-        uses: peter-evans/repository-dispatch@v3
-        with:
-          repository: ${{ github.repository }}
-          token: ${{ secrets.GITHUB_TOKEN }}
-          event-type: run-test1
-
-      - name: Start test case 2
-        uses: peter-evans/repository-dispatch@v3
-        with:
-          repository: ${{ github.repository }}
-          token: ${{ secrets.GITHUB_TOKEN }}
-          event-type: run-test2
-          
-      - name: Start test case 3
-        uses: peter-evans/repository-dispatch@v3
-        with:
-          repository: ${{ github.repository }}
-          token: ${{ secrets.GITHUB_TOKEN }}
-          event-type: run-test3
-
-          
+      - run: echo "Triggering TSP tests workflows"

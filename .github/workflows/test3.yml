@@ -1,8 +1,9 @@
 name: TSP Test 3
 
 on:
-  repository_dispatch:
-    types: [run-test3]
+  workflow_run:
+    workflows: ["TSP tests trigger"]
+    types: [completed]
 
 jobs:
   run-test:
