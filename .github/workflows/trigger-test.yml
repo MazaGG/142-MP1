@@ -1,0 +1,12 @@
+name: Trigger Tests
+
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  trigger-tests:
+    runs-on: ubuntu-22.04
+
+    steps:
+      - run: echo "Triggering test case 1 workflow"

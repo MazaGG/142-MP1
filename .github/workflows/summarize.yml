@@ -28,7 +28,7 @@ jobs:
           workflow_conclusion: success
           allow_forks: true
           name: test1-results
-          path: results
+          path: results/test1-results
       
       - name: Download test 2 results
         uses: dawidd6/action-download-artifact@v3
@@ -39,7 +39,7 @@ jobs:
           workflow_conclusion: success
           allow_forks: true
           name: test2-results
-          path: results
+          path: results/test2-results
       
       - name: Download test 3 results
         uses: dawidd6/action-download-artifact@v3
@@ -50,7 +50,7 @@ jobs:
           workflow_conclusion: success
           allow_forks: true
           name: test3-results
-          path: results
+          path: results/test3-results
 
       - name: List results folder
         run: |
