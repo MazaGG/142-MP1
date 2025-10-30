@@ -1,58 +1,56 @@
+from algorithms.exhaustive import tsp_exhaustive
+from algorithms.dynamic import tsp_dynamic
+from algorithms.greedy import tsp_greedy
+
+from tabulate import tabulate
 import numpy as np
-import glob
+import time
 
-# Find all test result files
-files = sorted(glob.glob("results/test*-results.txt"))
-print("Found files:", files)
+# Generate a set of test distance matrices
+cities = (np.random.randint(0, 100, (30, 2)))
+D = np.round(np.linalg.norm(cities[:, np.newaxis] - cities[np.newaxis, :], axis=-1))
 
-# Function to extract result sections from file
-def extract_results(filename, section):
-    with open(filename) as f:
-        lines = f.readlines()
+# Test Exhaustive Search
+print("\Exhaustive Search\n")
+exhaustive_results = []
+for i in range(4,15):
+  start = time.time()
+  cost, path = tsp_exhaustive(D[:i+1, :i+1])
+  end = time.time()
+  exhaustive_results.append([i+1, end-start, cost, path]) 
+  print(f"N={i+1}, Runtime={end-start:.6f}s, Cost={cost}, Path={path}")
+print("\n")
 
-    start = None
-    for i, line in enumerate(lines):
-        if section in line:
-            start = i + 1
-            break
-    if start is None:
-        return None
+# Test Dynamic Programming
+print("\nDynamic Programming\n")
+dynamic_results = []
+for i in range(4,15):
+  start = time.time()
+  cost, path = tsp_dynamic(D[:i+1, :i+1])
+  end = time.time()
+  dynamic_results.append([i+1, end-start, cost, path]) 
+  print(f"N={i+1}, Runtime={end-start:.6f}s, Cost={cost}, Path={path}")
+print("\n")
 
-    data = []
-    for line in lines[start:]:
-        if line.startswith("#"):
-            break
-        line = line.strip()
-        if line:
-            data.append(list(map(float, line.split())))
-    return np.array(data)
+# Test Greedy Algorithm
+print("\Greedy Algorithm\n")
+greedy_results = []
+for i in range(4,15):
+  start = time.time()
+  cost, path = tsp_greedy(D[:i+1, :i+1])
+  end = time.time()
+  greedy_results.append([i+1, end-start, cost, path]) 
+  print(f"N={i+1}, Runtime={end-start:.6f}s, Cost={cost}, Path={path}")
+print("\n")
 
-sections = {
-    "Exhaustive": "# Exhaustive Results",
-    "Dynamic": "# Dynamic Results",
-    "Greedy": "# Greedy Results"
-}
-
-# Collect all results per algorithm
-algorithm_data = {}
-for name, section in sections.items():
-    algorithm_data[name] = []
-    for file in files:
-        data = extract_results(file, section)
-        if data is not None:
-            algorithm_data[name].append(data)
-        else:
-            print(f"Warning: {section} not found in {file}")
-
-# Generate summary tables
+# Save Results to File
 with open("results.txt", "w") as f:
-    for algo, datasets in algorithm_data.items():
-        if not datasets:
-            continue
-        
-        min_len = min(len(d) for d in datasets)
-        datasets = [d[:min_len] for d in datasets]
+  f.write("# Distance Matrix D\n")
+  np.savetxt(f, D, fmt="%d")
+  f.write("\n# Exhaustive Results\n")
+  np.savetxt(f, exhaustive_results, fmt="%.6f")
+  f.write("\n# Dynamic Results\n")
+  np.savetxt(f, dynamic_results, fmt="%.6f")
+  f.write("\n# Greedy Results\n")
+  np.savetxt(f, greedy_results, fmt="%.6f")
 
-        stacked = np.stack(datasets, axis=2) 
-        N_values = stacked[:, 0, 0].astype(int)
-        runtimes = stacked[:, 1, :] 
