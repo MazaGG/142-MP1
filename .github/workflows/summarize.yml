@@ -29,6 +29,11 @@ jobs:
           pip install --upgrade pip
           pip install -r requirements.txt
 
+      - name: Debug artifact contents
+        run: |
+          pwd
+          ls -R
+
       - name: Run summarizer
         run: python summarize.py
 
