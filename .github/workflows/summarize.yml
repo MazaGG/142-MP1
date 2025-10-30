@@ -2,9 +2,8 @@ name: Summarize Results
 
 on:
   workflow_run:
-    workflows: ["TSP Test 1", "TSP Test 2", "TSP Test 3"]
-    types:
-      - completed
+    workflows: ["TSP Test 3"]
+    types: [completed]
 
 jobs:
   summarize:

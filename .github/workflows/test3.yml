@@ -2,7 +2,7 @@ name: TSP Test 3
 
 on:
   workflow_run:
-    workflows: ["TSP tests trigger"]
+    workflows: ["TSP Test 2"]
     types: [completed]
 
 jobs:
