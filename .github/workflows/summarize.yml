@@ -24,6 +24,10 @@ jobs:
         with:
           path: results/
 
+      - name: List results folder
+        run: |
+          ls -R results || echo "No results folder found"
+
       - name: Install dependencies
         run: |
           pip install --upgrade pip
