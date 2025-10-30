@@ -4,6 +4,10 @@ on:
   repository_dispatch:
     types: [run-test1]
 
+permissions:
+  contents: read
+  actions: write
+
 jobs:
   run-test:
     runs-on: ubuntu-22.04
