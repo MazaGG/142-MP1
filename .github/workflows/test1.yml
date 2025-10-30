@@ -1,9 +1,12 @@
 name: TSP Test 1
 
+# on:
+#   workflow_run:
+#     workflows: ["Trigger Tests"]
+#     types: [completed]
 on:
-  workflow_run:
-    workflows: ["Trigger Tests"]
-    types: [completed]
+  push:
+    branches: [ "main" ]
 
 jobs:
   run-test:
