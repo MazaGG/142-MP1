@@ -29,12 +29,12 @@ def extract_summary(filename):
     greedy = data[:, 3]
     return N, exhaustive, dynamic, greedy
 
-
 # Define model fitting
 def fit_model(N, T, model_fn):
     f = model_fn(N)
     a, *_ = np.linalg.lstsq(f[:, None], T, rcond=None)
-    return float(a), lambda n: a * model_fn(n)
+    a = float(a[0])
+    return a, lambda n: a * model_fn(n)
 
 # Load data
 N, exhaustive, dynamic, greedy = extract_summary("results.txt")
