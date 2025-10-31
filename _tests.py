@@ -45,7 +45,10 @@ print("\n")
 
 # Save Results to File
 with open("results.txt", "w") as f:
-    f.write("# Distance Matrix D\n")
+    f.write("# Cities\n")
+    np.savetxt(f, cities, fmt="%d")
+
+    f.write("\n# Distance Matrix D\n")
     np.savetxt(f, D, fmt="%d")
 
     f.write("\n# Exhaustive Results\n")

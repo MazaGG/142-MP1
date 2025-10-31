@@ -61,7 +61,7 @@ jobs:
           pip install -r requirements.txt
 
       - name: Run summarizer
-        run: python summarize.py
+        run: python _summarize.py
 
       - name: Upload summary
         uses: actions/upload-artifact@v4
@@ -70,10 +70,10 @@ jobs:
           path: results.txt
 
       - name: Run graphing script
-        run: python graph.py
+        run: python _graph.py
 
       - name: Upload graph
         uses: actions/upload-artifact@v4
         with:
-          name: graph
-          path: graph.png
+          name: graphs
+          path: graphs
