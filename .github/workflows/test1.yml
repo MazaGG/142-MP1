@@ -2,8 +2,8 @@ name: TSP Test 1
 run-name: TSP Test 1
 
 on:
-  push:
-    branches: [ "main" ]
+  repository_dispatch:
+    types: [trigger-test1]
 
 jobs:
   run-test:
@@ -29,5 +29,14 @@ jobs:
       - name: Upload results
         uses: actions/upload-artifact@v4
         with:
-          name: test1-results
+          name: test1-results-${{ github.run_number }}
           path: results.txt
+
+      - name: Trigger test 3
+        if: success()
+        uses: peter-evans/repository-dispatch@v3
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          repository: ${{ github.repository }}
+          event-type: trigger-test3
+          client-payload: '{"run_number": "${{ github.run_number }}"}'

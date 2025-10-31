@@ -1,9 +1,8 @@
 name: TSP Test 3
 
 on:
-  workflow_run:
-    workflows: ["TSP Test 2"]
-    types: [completed]
+  repository_dispatch:
+    types: [trigger-test3]
 
 jobs:
   run-test:
@@ -29,5 +28,14 @@ jobs:
       - name: Upload results
         uses: actions/upload-artifact@v4
         with:
-          name: test3-results
+          name: test3-results-${{ github.event.client_payload.run_number }}
           path: results.txt
+      
+      - name: Trigger summarization
+        if: success()
+        uses: peter-evans/repository-dispatch@v3
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          repository: ${{ github.repository }}
+          event-type: summarize
+          client-payload: '{"run_number": "${{ github.event.client_payload.run_number }}"}'
