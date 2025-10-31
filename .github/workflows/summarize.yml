@@ -22,7 +22,7 @@ jobs:
       - name: Download test 1 results
         uses: dawidd6/action-download-artifact@v3
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
+          github_token: ${{ secrets.PAT }}
           repo: ${{ github.repository }}
           workflow: test1.yml
           workflow_conclusion: success
@@ -32,7 +32,7 @@ jobs:
       - name: Download test 2 results
         uses: dawidd6/action-download-artifact@v3
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
+          github_token: ${{ secrets.PAT }}
           repo: ${{ github.repository }}
           workflow: test2.yml
           workflow_conclusion: success
@@ -42,7 +42,7 @@ jobs:
       - name: Download test 3 results
         uses: dawidd6/action-download-artifact@v3
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
+          github_token: ${{ secrets.PAT }}
           repo: ${{ github.repository }}
           workflow: test3.yml
           workflow_conclusion: success
