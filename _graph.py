@@ -94,8 +94,8 @@ a_exh, f_exh = fit_model(N, exhaustive, lambda n: np.array([math.factorial(int(x
 a_dyn, f_dyn = fit_model(N, dynamic, lambda n: n**2 * (2**n))
 a_gre, f_gre = fit_model(N, greedy, lambda n: n**2)
 
-# Extrapolate for N = 26–50
-N_extrap = np.arange(16, 50)
+# Extrapolate for N = 16–30
+N_extrap = np.arange(16, 30)
 exh_pred = f_exh(N_extrap)
 dyn_pred = f_dyn(N_extrap)
 gre_pred = f_gre(N_extrap)
@@ -103,9 +103,9 @@ gre_pred = f_gre(N_extrap)
 # Plot small N
 plt.figure(figsize=(10, 6))
 
-plt.plot(N, exhaustive, "-o", color="red", label="Exhaustive (measured)")
-plt.plot(N, dynamic, "-o", color="blue", label="Dynamic (measured)")
-plt.plot(N, greedy, "-o", color="green", label="Greedy (measured)")
+plt.plot(N[:10], exhaustive[:10], "-o", color="red", label="Exhaustive (measured)")
+plt.plot(N[:10], dynamic[:10], "-o", color="blue", label="Dynamic (measured)")
+plt.plot(N[:10], greedy[:10], "-o", color="green", label="Greedy (measured)")
 
 plt.xlabel("Number of Cities (N)")
 plt.ylabel("Runtime (seconds)")
@@ -113,7 +113,7 @@ plt.title("TSP Algorithm Runtimes for Small N")
 plt.legend()
 plt.grid(True, which="both", linestyle="--", alpha=0.6)
 plt.tight_layout()
-plt.savefig("graphs/extrapolated.png", dpi=300)
+plt.savefig("graphs/small-n.png", dpi=300)
 plt.show()
 
 # Plot big N
