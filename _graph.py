@@ -103,7 +103,7 @@ gre_pred = f_gre(N_extrap)
 # Plot small N
 plt.figure(figsize=(10, 6))
 
-plt.plot(N[:10], exhaustive[:10], "-o", color="red", label="Exhaustive (measured)")
+# plt.plot(N[:10], exhaustive[:10], "-o", color="red", label="Exhaustive (measured)")
 plt.plot(N[:10], dynamic[:10], "-o", color="blue", label="Dynamic (measured)")
 plt.plot(N[:10], greedy[:10], "-o", color="green", label="Greedy (measured)")
 
@@ -116,45 +116,45 @@ plt.tight_layout()
 plt.savefig("graphs/small-n.png", dpi=300)
 plt.show()
 
-# Plot big N
+# Plot log scale for small N
 plt.figure(figsize=(10, 6))
 
-plt.plot(N, exhaustive, "-o", color="red", label="Exhaustive (measured)")
-plt.plot(N, dynamic, "-o", color="blue", label="Dynamic (measured)")
-plt.plot(N, greedy, "-o", color="green", label="Greedy (measured)")
+plt.plot(N[:10], exhaustive[:10], "-o", color="red", label="Exhaustive (measured)")
+plt.plot(N[:10], dynamic[:10], "-o", color="blue", label="Dynamic (measured)")
+plt.plot(N[:10], greedy[:10], "-o", color="green", label="Greedy (measured)")
 
-plt.plot(N_extrap, exh_pred, "-o", color="lightcoral", label="Exhaustive (extrapolated )")
-plt.plot(N_extrap, dyn_pred, "-o", color="cornflowerblue", label="Dynamic (extrapolated )")
-plt.plot(N_extrap, gre_pred, "-o", color="limegreen", label="Greedy (extrapolated )")
-
+plt.yscale("log")
 plt.xlabel("Number of Cities (N)")
-plt.ylabel("Runtime (seconds)")
-plt.title("TSP Algorithm Runtimes for Large N")
+plt.ylabel("Runtime (log scale)")
+plt.title("TSP Algorithm Runtimes for Small N")
 plt.legend()
 plt.grid(True, which="both", linestyle="--", alpha=0.6)
 plt.tight_layout()
-plt.savefig("graphs/large-n.png", dpi=300)
+plt.savefig("graphs/logscale.png", dpi=300)
 plt.show()
 
-# Plot test 1 cities
-# for i in range(3):
-#     cities = extract_cities(f"results/test{i+1}-results/results.txt")
-#     exh_cities = extract_cities(f"results/test{i+1}-results/results.txt", "Exhaustive")
-#     gre_cities = extract_cities(f"results/test{i+1}-results/results.txt", "Greedy")
-#     plt.figure(figsize=(8, 8))
-#     plt.scatter(cities[:, 0], cities[:, 1], color="black")
-#     plt.title(f"Test {i+1} Path Results")
-#     plt.xlabel("X Coordinate")
-#     plt.ylabel("Y Coordinate")
-#     for j, algo in enumerate(["Exhaustive", "Greedy"]):
-#         paths = extract_paths(f"results/test{i+1}-results/results.txt", algo)
-#         plt.subplot(1, 2, j + 1)
-#         plt.scatter(cities[:, 0], cities[:, 1], color="black")
-#         for path in paths:
-#             valid_path = path[path != -1]
-#             path_coords = cities[valid_path]
-#             plt.plot(path_coords[:, 0], path_coords[:, 1], marker="o")
-#         plt.title(f"{algo} Paths")
-#         plt.xlabel("X Coordinate")
-#         plt.ylabel("Y Coordinate")
+# Plot big N
+plt.figure(figsize=(10, 6))
 
+# Plot measured data
+plt.plot(N, exhaustive, "o", color="red", label="Exhaustive (measured)")
+plt.plot(N, dynamic, "o", color="blue", label="Dynamic (measured)")
+plt.plot(N, greedy, "o", color="green", label="Greedy (measured)")
+
+N_cont = np.linspace(N.min(), 30, 300)
+exh_fit = f_exh(N_cont)
+dyn_fit = f_dyn(N_cont)
+gre_fit = f_gre(N_cont)
+
+plt.plot(N_cont, exh_fit, "-", color="lightcoral", label="Exhaustive (fitted curve)")
+plt.plot(N_cont, dyn_fit, "-", color="cornflowerblue", label="Dynamic (fitted curve)")
+plt.plot(N_cont, gre_fit, "-", color="limegreen", label="Greedy (fitted curve)")
+
+plt.xlabel("Number of Cities (N)")
+plt.ylabel("Runtime (seconds)")
+plt.title("TSP Algorithm Runtime Growth up to N = 30 (Fitted Models)")
+plt.legend()
+plt.grid(True, which="both", linestyle="--", alpha=0.6)
+plt.tight_layout()
+plt.savefig("graphs/fitted-curves.png", dpi=300)
+plt.show()
