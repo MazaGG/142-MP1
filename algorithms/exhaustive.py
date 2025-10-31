@@ -1,10 +1,3 @@
-# Input: nxn distance matrix
-# Example: D[i][j] is the distance from city i to city j
-
-# Output: a tour (list of cities) and its cost (tour length)
-# Note: The tour should always start and end at city 0
-# Example: tour = [0, 2, 3, 1, 0], cost = 10.5
-
 def tsp_exhaustive(D):
   n = len(D)
   
@@ -80,26 +73,3 @@ def tsp_exhaustive(D):
   # After all permutations are checked, return the best one found.
   return min_cost[0], best_tour[0]
 
-# # ------------------------------------------------------------------
-# # Sample Input
-D = [
-    [0, 10, 15, 20],
-    [10, 0, 35, 25],
-    [15, 35, 0, 30],
-    [20, 25, 30, 0]
-]
-
-# # Sample Output
-# Tracing the output:
-# Path 1: [0, 1, 2, 3, 0] -> Cost: 10 + 35 + 30 + 20 = 95
-# Path 2: [0, 1, 3, 2, 0] -> Cost: 10 + 25 + 30 + 15 = 80
-# Path 3: [0, 2, 1, 3, 0] -> Cost: 15 + 35 + 25 + 20 = 95
-# Path 4: [0, 2, 3, 1, 0] -> Cost: 15 + 30 + 25 + 10 = 80
-# Path 5: [0, 3, 1, 2, 0] -> Cost: 20 + 25 + 35 + 15 = 95
-# Path 6: [0, 3, 2, 1, 0] -> Cost: 20 + 30 + 35 + 10 = 95
-#
-# The minimum cost is 80.
-
-cost, tour = tsp_exhaustive(D)
-print("Cost:", cost)
-print("Tour:", tour) # Will be [0, 1, 3, 2, 0] or [0, 2, 3, 1, 0]

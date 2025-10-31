@@ -48,17 +48,3 @@ def tsp_dynamic(D):
     path = list(map(int, path))
 
     return min_cost, path
-
-# ------------------------------------------------------------------
-# Sample Input
-# D = [
-#     [0, 10, 15, 20],
-#     [10, 0, 35, 25],
-#     [15, 35, 0, 30],
-#     [20, 25, 30, 0]
-# ]
-
-# # Sample Output
-# cost, tour = tsp_dynamic(D)
-# print("Cost:", cost)
-# print("Tour:", tour)

@@ -1,10 +1,3 @@
-# Input: nxn distance matrix
-# Example: D[i][j] is the distance from city i to city j
-
-# Output: a tour (list of cities) and its cost (tour length)
-# Note: The tour should always start and end at city 0
-# Example: tour = [0, 2, 3, 1, 0], cost = 10.5
-
 def tsp_greedy(D):
   n = len(D)
   
@@ -51,24 +44,3 @@ def tsp_greedy(D):
   
   # Return the final cost and the path taken
   return total_cost, path
-
-# # ------------------------------------------------------------------
-# # Sample Input
-D = [
-    [0, 10, 15, 20],
-    [10, 0, 35, 25],
-    [15, 35, 0, 30],
-    [20, 25, 30, 0]
-]
-
-# # Sample Output
-# Tracing the output:
-# 1. Start at 0. Path: [0]
-# 2. From 0, nearest is 1 (cost 10). total_cost=10. Path: [0, 1]
-# 3. From 1, nearest unvisited is 3 (cost 25). total_cost=35. Path: [0, 1, 3]
-# 4. From 3, nearest unvisited is 2 (cost 30). total_cost=65. Path: [0, 1, 3, 2]
-# 5. All visited. Return to 0. From 2, cost to 0 is 15. total_cost=80. Path: [0, 1, 3, 2, 0]
-
-cost, tour = tsp_greedy(D)
-print("Cost:", cost)
-print("Tour:", tour)
