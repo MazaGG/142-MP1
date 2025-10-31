@@ -11,7 +11,7 @@ cities = (np.random.randint(0, 100, (30, 2)))
 D = np.round(np.linalg.norm(cities[:, np.newaxis] - cities[np.newaxis, :], axis=-1))
 
 # Test Exhaustive Search
-print("\Exhaustive Search\n")
+print("# Exhaustive Search\n")
 exhaustive_results = []
 for i in range(4,15):
   start = time.time()
@@ -22,7 +22,7 @@ for i in range(4,15):
 print("\n")
 
 # Test Dynamic Programming
-print("\nDynamic Programming\n")
+print("\n# Dynamic Programming\n")
 dynamic_results = []
 for i in range(4,15):
   start = time.time()
@@ -33,7 +33,7 @@ for i in range(4,15):
 print("\n")
 
 # Test Greedy Algorithm
-print("\Greedy Algorithm\n")
+print("# Greedy Algorithm\n")
 greedy_results = []
 for i in range(4,15):
   start = time.time()

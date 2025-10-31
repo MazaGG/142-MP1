@@ -7,9 +7,12 @@ on:
 
 jobs:
   summarize:
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+  
     runs-on: ubuntu-22.04
 
     steps:
+
       - name: Checkout repository
         uses: actions/checkout@v4
 
@@ -23,9 +26,8 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           repo: ${{ github.repository }}
-          workflow: test1.yml
+          workflow: TSP Test 1
           workflow_conclusion: success
-          allow_forks: true
           name: test1-results
           path: results/test1-results
       
@@ -34,9 +36,8 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           repo: ${{ github.repository }}
-          workflow: test2.yml
+          workflow: TSP Test 2
           workflow_conclusion: success
-          allow_forks: true
           name: test2-results
           path: results/test2-results
       
@@ -45,9 +46,8 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           repo: ${{ github.repository }}
-          workflow: test3.yml
+          workflow: TSP Test 3
           workflow_conclusion: success
-          allow_forks: true
           name: test3-results
           path: results/test3-results
 
@@ -77,3 +77,9 @@ jobs:
         with:
           name: graphs
           path: graphs
+
+      - name: Upload full results
+        uses: actions/upload-artifact@v4
+        with:
+          name: full-results
+          path: results
