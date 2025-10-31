@@ -2,8 +2,8 @@ name: TSP Test 1
 run-name: TSP Test 1
 
 on:
-  repository_dispatch:
-    types: [trigger-test1]
+  push:
+    branches: [main]
 
 jobs:
   run-test:
