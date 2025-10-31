@@ -1,8 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
-import math
 
-# Read the summary
+# --- Read Summary ---
 def extract_summary(filename):
     with open(filename) as f:
         lines = f.readlines()
@@ -10,7 +9,7 @@ def extract_summary(filename):
     start = None
     for i, line in enumerate(lines):
         if line.strip().startswith("# Summary (Average Runtime per Algorithm)"):
-            start = i + 2  # skip header line
+            start = i + 2  # skip header
             break
     if start is None:
         raise ValueError("Summary section not found")
@@ -27,148 +26,101 @@ def extract_summary(filename):
     exhaustive = data[:, 1]
     dynamic = data[:, 2]
     greedy = data[:, 3]
-    print(N, exhaustive, dynamic, greedy)
     return N, exhaustive, dynamic, greedy
 
-# Read the input data
-def extract_cities(filename):
-    with open(filename) as f:
-        lines = f.readlines()
-
-    data = []
-    for line in lines[1:]:
-        line = line.strip()
-        if not line or line.startswith("#"):
-            break
-        data.append(list(map(float, line.split())))
-    
-    data = np.array(data)
-    return data
-
-# Read the paths
-def extract_paths(filename, algo):
-    with open(filename) as f:
-        lines = f.readlines()
-    
-    start = None
-    for i, line in enumerate(lines):
-        if line.strip().startswith(f"# {algo} Results"):
-            start = i + 1
-            break
-    if start is None:
-        raise ValueError(f"{algo} section not found")
-
-    data = []
-    for line in lines[start:]:
-        line = line.strip()
-        if not line or line.startswith("#"):
-            break
-        parts = line.split(None, 3)
-        try:
-            path_str = " ".join(parts[3:])
-            path = eval(path_str)
-            data.append(path)
-        except (ValueError, IndexError, SyntaxError):
-            continue
-    
-    # Convert to rectangular NumPy array (pad shorter ones)
-    max_len = max(len(p) for p in data)
-    matrix = np.full((len(data), max_len), -1, dtype=int)
-    for i, path in enumerate(data):
-        matrix[i, :len(path)] = path
-    return matrix
-
-
-# Define model fitting
-def fit_model(N, T, model_fn):
-    f = model_fn(N)
-    a, *_ = np.linalg.lstsq(f[:, None], T, rcond=None)
-    a = float(a[0])
-    return a, lambda n: a * model_fn(n)
-
-# Load data
+# --- Load summary data ---
 N, exhaustive, dynamic, greedy = extract_summary("results.txt")
 
-# Fit models to measured data
-a_exh, f_exh = fit_model(N, exhaustive, lambda n: np.array([math.factorial(int(x)) for x in n]))
-a_dyn, f_dyn = fit_model(N, dynamic, lambda n: n**2 * (2**n))
-a_gre, f_gre = fit_model(N, greedy, lambda n: n**2)
+# Known measured limits
+max_exh = 15
+max_dyn = 25
+max_gre = 30 
 
-# Extrapolate for N = 16–30
-N_extrap = np.arange(16, 30)
-exh_pred = f_exh(N_extrap)
-dyn_pred = f_dyn(N_extrap)
-gre_pred = f_gre(N_extrap)
+# Split measured vs extrapolated regions
+mask_exh_meas = N <= max_exh
+mask_exh_ext  = N > max_exh
+mask_dyn_meas = N <= max_dyn
+mask_dyn_ext  = N > max_dyn
+mask_gre_meas = N <= max_gre
+mask_gre_ext  = N > max_gre
 
-# Plot small N
+# --- Plot for small N ---
 plt.figure(figsize=(10, 6))
 
-plt.plot(N[:10], exhaustive[:10], "-o", color="red", label="Exhaustive (measured)")
-plt.plot(N[:10], dynamic[:10], "-o", color="blue", label="Dynamic (measured)")
-plt.plot(N[:10], greedy[:10], "-o", color="green", label="Greedy (measured)")
+plt.plot(N[:10], exhaustive[:10], "o", color="red", label="Exhaustive")
+plt.plot(N[:10], dynamic[:10], "o", color="blue", label="Dynamic")
+plt.plot(N[:10], greedy[:10], "o", color="green", label="Greedy")
 
 plt.xlabel("Number of Cities (N)")
 plt.ylabel("Runtime (seconds)")
-plt.title("TSP Algorithm Runtimes for Small N")
+plt.title("TSP Algorithm Runtime for Small N")
 plt.legend()
-plt.grid(True, which="both", linestyle="--", alpha=0.6)
+plt.grid(True, linestyle="--", alpha=0.6)
 plt.tight_layout()
 plt.savefig("graphs/small-n.png", dpi=300)
 plt.show()
 
-# Plot small N w/o exhaustive
+# --- Plot for small N w/o exhaustive ---
 plt.figure(figsize=(10, 6))
 
-plt.plot(N[:10], exhaustive[:10], "-o", color="red", label="Exhaustive (measured)")
-plt.plot(N[:10], dynamic[:10], "-o", color="blue", label="Dynamic (measured)")
-plt.plot(N[:10], greedy[:10], "-o", color="green", label="Greedy (measured)")
+plt.plot(N[:10], dynamic[:10], "o", color="blue", label="Dynamic")
+plt.plot(N[:10], greedy[:10], "o", color="green", label="Greedy")
 
 plt.xlabel("Number of Cities (N)")
 plt.ylabel("Runtime (seconds)")
-plt.title("TSP Algorithm Runtimes for Small N")
+plt.title("TSP Algorithm Runtime for Small N")
 plt.legend()
-plt.grid(True, which="both", linestyle="--", alpha=0.6)
+plt.grid(True, linestyle="--", alpha=0.6)
 plt.tight_layout()
 plt.savefig("graphs/small-n2.png", dpi=300)
 plt.show()
 
-# Plot log scale for large N
+# --- Plot for large N ---
 plt.figure(figsize=(10, 6))
 
-plt.plot(N, exhaustive, "-o", color="red", label="Exhaustive (measured)")
-plt.plot(N, dynamic, "-o", color="blue", label="Dynamic (measured)")
-plt.plot(N, greedy, "-o", color="green", label="Greedy (measured)")
+# Exhaustive
+plt.plot(N[mask_exh_meas], exhaustive[mask_exh_meas], "o", color="red", label="Exhaustive (measured)")
+if np.any(mask_exh_ext):
+    plt.plot(N[mask_exh_ext], exhaustive[mask_exh_ext], "o", color="maroon", label="Exhaustive (extrapolated)")
 
-plt.plot(N_extrap, exh_pred, "-o", color="lightcoral", label="Exhaustive (extrapolated )")
-plt.plot(N_extrap, dyn_pred, "-o", color="cornflowerblue", label="Dynamic (extrapolated )")
-plt.plot(N_extrap, gre_pred, "-o", color="limegreen", label="Greedy (extrapolated )")
+# Dynamic
+plt.plot(N[mask_dyn_meas], dynamic[mask_dyn_meas], "o", color="blue", label="Dynamic (measured)")
+if np.any(mask_dyn_ext):
+    plt.plot(N[mask_dyn_ext], dynamic[mask_dyn_ext], "o", color="cyan", label="Dynamic (extrapolated)")
+
+# Greedy
+plt.plot(N[mask_gre_meas], greedy[mask_gre_meas], "o", color="green", label="Greedy (measured)")
+if np.any(mask_gre_ext):
+    plt.plot(N[mask_gre_ext], greedy[mask_gre_ext], "o", color="lime", label="Greedy (extrapolated)")
+
+# Labels and styling
+plt.xlabel("Number of Cities (N)")
+plt.ylabel("Runtime (seconds)")
+plt.title("TSP Algorithm Runtime Growth")
+plt.legend()
+plt.grid(True, linestyle="--", alpha=0.6)
+plt.tight_layout()
+plt.savefig("graphs/large-n.png", dpi=300)
+plt.show()
+
+# --- Plot for large N (log scale) ---
+plt.figure(figsize=(10, 6))
+plt.plot(N[mask_exh_meas], exhaustive[mask_exh_meas], "o", color="red", label="Exhaustive (measured)")
+if np.any(mask_exh_ext):
+    plt.plot(N[mask_exh_ext], exhaustive[mask_exh_ext], "o", color="maroon", label="Exhaustive (extrapolated)")
+plt.plot(N[mask_dyn_meas], dynamic[mask_dyn_meas], "o", color="blue", label="Dynamic (measured)")
+if np.any(mask_dyn_ext):
+    plt.plot(N[mask_dyn_ext], dynamic[mask_dyn_ext], "o", color="cyan", label="Dynamic (extrapolated)")
+plt.plot(N[mask_gre_meas], greedy[mask_gre_meas], "o", color="green", label="Greedy (measured)")
+if np.any(mask_gre_ext):
+    plt.plot(N[mask_gre_ext], greedy[mask_gre_ext], "o", color="lime", label="Greedy (extrapolated)")
 
 plt.yscale("log")
 plt.xlabel("Number of Cities (N)")
 plt.ylabel("Runtime (log scale)")
-plt.title("TSP Algorithm Runtimes for Small N")
+plt.title("TSP Algorithm Runtime Growth (Log Scale)")
 plt.legend()
-plt.grid(True, which="both", linestyle="--", alpha=0.6)
+plt.grid(True, linestyle="--", alpha=0.6)
 plt.tight_layout()
-plt.savefig("graphs/logscale.png", dpi=300)
-plt.show()
-
-# Plot log N
-plt.figure(figsize=(10, 6))
-
-plt.plot(N, exhaustive, "-o", color="red", label="Exhaustive (measured)")
-plt.plot(N, dynamic, "-o", color="blue", label="Dynamic (measured)")
-plt.plot(N, greedy, "-o", color="green", label="Greedy (measured)")
-
-plt.plot(N_extrap, exh_pred, "-o", color="lightcoral", label="Exhaustive (extrapolated )")
-plt.plot(N_extrap, dyn_pred, "-o", color="cornflowerblue", label="Dynamic (extrapolated )")
-plt.plot(N_extrap, gre_pred, "-o", color="limegreen", label="Greedy (extrapolated )")
-
-plt.xlabel("Number of Cities (N)")
-plt.ylabel("Runtime (seconds)")
-plt.title("TSP Algorithm Runtimes for Large N")
-plt.legend()
-plt.grid(True, which="both", linestyle="--", alpha=0.6)
-plt.tight_layout()
-plt.savefig("graphs/large-n.png", dpi=300)
+plt.savefig("graphs/large-n-logscale.png", dpi=300)
 plt.show()

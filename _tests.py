@@ -24,7 +24,7 @@ print("\n")
 # Test Dynamic Programming
 print("\n# Dynamic Programming\n")
 dynamic_results = []
-for i in range(4,15):
+for i in range(4,25):
   start = time.time()
   cost, path = tsp_dynamic(D[:i+1, :i+1])
   end = time.time()
@@ -35,7 +35,7 @@ print("\n")
 # Test Greedy Algorithm
 print("# Greedy Algorithm\n")
 greedy_results = []
-for i in range(4,15):
+for i in range(4,30):
   start = time.time()
   cost, path = tsp_greedy(D[:i+1, :i+1])
   end = time.time()

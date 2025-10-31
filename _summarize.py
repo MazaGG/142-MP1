@@ -1,13 +1,10 @@
 import numpy as np
 import glob
-import os
+import math
 
-# Find all test result files
-files = sorted(glob.glob("results/**/results.txt", recursive=True))
-print("Found files:", files)
-
-# Function to extract result sections from file
+# --- Helper functions ---
 def extract_results(filename, section):
+    """Extract [N, runtime] pairs from a given algorithm section."""
     with open(filename) as f:
         lines = f.readlines()
 
@@ -26,15 +23,27 @@ def extract_results(filename, section):
         line = line.strip()
         if not line:
             continue
-
         parts = line.split()
         try:
-            N = int(float(parts[0]))       # number of cities
-            runtime = float(parts[1])      # runtime (second column)
+            N = int(float(parts[0]))
+            runtime = float(parts[1])
             data.append([N, runtime])
         except (ValueError, IndexError):
             continue
     return np.array(data)
+
+
+def fit_model(N, T, model_fn):
+    """Fit a runtime model T ≈ a * model_fn(N) using least squares."""
+    f = model_fn(N)
+    a, *_ = np.linalg.lstsq(f[:, None], T, rcond=None)
+    a = float(a[0])
+    return a, lambda n: a * model_fn(n)
+
+
+# --- Main summary generation ---
+files = sorted(glob.glob("results/**/results.txt", recursive=True))
+print("Found files:", files)
 
 sections = {
     "Exhaustive": "# Exhaustive Results",
@@ -42,7 +51,6 @@ sections = {
     "Greedy": "# Greedy Results"
 }
 
-# Collect all results per algorithm
 algorithm_data = {}
 for name, section in sections.items():
     algorithm_data[name] = []
@@ -54,10 +62,10 @@ for name, section in sections.items():
         else:
             print(f"Warning: no data found for {name} in {file}")
 
-# Generate summary tables
+# --- Summarize results ---
 with open("results.txt", "w") as f:
-    wrote_anything = False
     avg_per_algo = {}
+    wrote_anything = False
 
     for algo, datasets in algorithm_data.items():
         if not datasets:
@@ -75,6 +83,7 @@ with open("results.txt", "w") as f:
 
         avg_per_algo[algo] = np.column_stack((N_values, avg_runtime))
 
+        # Save per-algorithm table
         table = np.column_stack((N_values, runtimes, avg_runtime))
         f.write(f"# {algo} Summary\n")
         np.savetxt(
@@ -86,16 +95,28 @@ with open("results.txt", "w") as f:
         )
         f.write("\n\n")
 
-    # Write overall summary (compare average runtimes per algorithm)
+    # --- Combine into unified summary (up to N = 30) ---
     if avg_per_algo:
         f.write("# Summary (Average Runtime per Algorithm)\n")
-        N = avg_per_algo["Exhaustive"][:, 0]
-        summary_table = np.column_stack([
-            N,
-            avg_per_algo["Exhaustive"][:, 1],
-            avg_per_algo["Dynamic"][:, 1],
-            avg_per_algo["Greedy"][:, 1]
-        ])
+
+        # Step 1: collect real data
+        N_exh, T_exh = avg_per_algo["Exhaustive"][:, 0], avg_per_algo["Exhaustive"][:, 1]
+        N_dyn, T_dyn = avg_per_algo["Dynamic"][:, 0], avg_per_algo["Dynamic"][:, 1]
+        N_gre, T_gre = avg_per_algo["Greedy"][:, 0], avg_per_algo["Greedy"][:, 1]
+
+        # Step 2: fit models for extrapolation
+        a_exh, f_exh = fit_model(N_exh, T_exh, lambda n: np.array([math.factorial(int(x)) for x in n]))
+        a_dyn, f_dyn = fit_model(N_dyn, T_dyn, lambda n: n**2 * (2**n))
+        a_gre, f_gre = fit_model(N_gre, T_gre, lambda n: n**2)
+
+        # Step 3: extend up to N = 30
+        N_full = np.arange(4, 31)
+        exh_full = np.array([f_exh([n])[0] if n > max(N_exh) else T_exh[n - N_exh[0]] for n in N_full])
+        dyn_full = np.array([f_dyn([n])[0] if n > max(N_dyn) else T_dyn[n - N_dyn[0]] for n in N_full])
+        gre_full = np.array([f_gre([n])[0] if n > max(N_gre) else T_gre[n - N_gre[0]] for n in N_full])
+
+        # Step 4: write combined summary
+        summary_table = np.column_stack((N_full, exh_full, dyn_full, gre_full))
         np.savetxt(
             f,
             summary_table,
@@ -108,4 +129,4 @@ with open("results.txt", "w") as f:
     if not wrote_anything:
         f.write("# No valid data found.\n")
 
-print("Finished writing summary to results.txt")
+print("Finished writing summary with extrapolation to results.txt")
