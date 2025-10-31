@@ -1,4 +1,5 @@
 name: TSP Test 3
+run-name: TSP Test 3
 
 on:
   repository_dispatch:

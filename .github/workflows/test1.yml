@@ -38,5 +38,5 @@ jobs:
         with:
           token: ${{ secrets.PAT }}
           repository: ${{ github.repository }}
-          event-type: trigger-test3
+          event-type: trigger-test2
           client-payload: '{"run_number": "${{ github.run_number }}"}'
