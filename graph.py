@@ -45,7 +45,7 @@ a_dyn, f_dyn = fit_model(N, dynamic, lambda n: n**2 * (2**n))
 a_gre, f_gre = fit_model(N, greedy, lambda n: n**2)
 
 # Extrapolate for N = 26–50
-N_extrap = np.arange(26, 51)
+N_extrap = np.arange(16, 20)
 exh_pred = f_exh(N_extrap)
 dyn_pred = f_dyn(N_extrap)
 gre_pred = f_gre(N_extrap)
@@ -57,9 +57,9 @@ plt.plot(N, exhaustive, "o", label="Exhaustive (measured)")
 plt.plot(N, dynamic, "o", label="Dynamic (measured)")
 plt.plot(N, greedy, "o", label="Greedy (measured)")
 
-plt.plot(N_extrap, exh_pred, "--", label="Exhaustive (extrapolated )")
-plt.plot(N_extrap, dyn_pred, "--", label="Dynamic (extrapolated )")
-plt.plot(N_extrap, gre_pred, "--", label="Greedy (extrapolated )")
+plt.plot(N_extrap, exh_pred, "o", label="Exhaustive (extrapolated )")
+plt.plot(N_extrap, dyn_pred, "o", label="Dynamic (extrapolated )")
+plt.plot(N_extrap, gre_pred, "o", label="Greedy (extrapolated )")
 
 plt.xlabel("Number of Cities (N)")
 plt.ylabel("Runtime (seconds)")
