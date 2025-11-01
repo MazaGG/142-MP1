@@ -13,6 +13,7 @@ D = np.round(np.linalg.norm(cities[:, np.newaxis] - cities[np.newaxis, :], axis=
 # Test Exhaustive Search
 print("# Exhaustive Search\n")
 exhaustive_results = []
+_, _ = tsp_exhaustive(D[:4, :4])  # Warm-up run
 for i in range(4,10):
   start = time.time()
   cost, path = tsp_exhaustive(D[:i+1, :i+1])
@@ -24,6 +25,7 @@ print("\n")
 # Test Dynamic Programming
 print("\n# Dynamic Programming\n")
 dynamic_results = []
+_, _ = tsp_dynamic(D[:4, :4])  # Warm-up run
 for i in range(4,15):
   start = time.time()
   cost, path = tsp_dynamic(D[:i+1, :i+1])
@@ -35,6 +37,7 @@ print("\n")
 # Test Greedy Algorithm
 print("# Greedy Algorithm\n")
 greedy_results = []
+_, _ = tsp_greedy(D[:4, :4])  # Warm-up run
 for i in range(4,20):
   start = time.time()
   cost, path = tsp_greedy(D[:i+1, :i+1])

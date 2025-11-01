@@ -107,7 +107,7 @@ plt.show()
 
 # --- Plot for large N (zoomed in) ---
 plt.figure(figsize=(10, 6))
-MAX_Y=100000
+MAX_Y=25000
 
 # Exhaustive (trimmed)
 mask_exh_meas_trim = (mask_exh_meas) & (exhaustive < MAX_Y)

@@ -110,7 +110,7 @@ with open("results.txt", "w") as f:
         a_gre, f_gre = fit_model(N_gre, T_gre, lambda n: np.asarray(n)**2)
 
         # Step 3: extend up to N = 30
-        N_full = np.arange(4, 31)
+        N_full = np.arange(5, 31)
         exh_full = []
         dyn_full = []
         gre_full = []
