@@ -64,17 +64,9 @@ plt.show()
 plt.figure(figsize=(10, 6))
 MAX_Y = 0.002 
 
-# Exhaustive
-mask_exh = (N[:6] >= 5) & (exhaustive[:6] < MAX_Y)
-plt.plot(N[mask_exh], exhaustive[mask_exh], "o", color="red", label="Exhaustive")
-
-# Dynamic
-mask_dyn = (N[:6] >= 5) & (dynamic[:6] < MAX_Y)
-plt.plot(N[mask_dyn], dynamic[mask_dyn], "o", color="blue", label="Dynamic")
-
-# Greedy
-mask_gre = (N[:6] >= 5) & (greedy[:6] < MAX_Y)
-plt.plot(N[mask_gre], greedy[mask_gre], "o", color="green", label="Greedy")
+plt.plot(N[:6][(exhaustive[:6] < MAX_Y)], exhaustive[:6][(exhaustive[:6] < MAX_Y)], "o", color="red", label="Exhaustive")
+plt.plot(N[:6][(dynamic[:6] < MAX_Y)], dynamic[:6][(dynamic[:6] < MAX_Y)], "o", color="blue", label="Dynamic")
+plt.plot(N[:6][(greedy[:6] < MAX_Y)], greedy[:6][(greedy[:6] < MAX_Y)], "o", color="green", label="Greedy")
 
 plt.ylim(top=MAX_Y)
 plt.xlabel("Number of Cities (N)")
