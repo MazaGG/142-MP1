@@ -139,7 +139,7 @@ with open("results.txt", "w") as f:
         gre_cost = cost_per_algo["Greedy"][:, 1]
         N = cost_per_algo["Dynamic"][:, 0]
 
-        mask = N <= 15
+        mask = N <= 10
         N_trim = N[mask]
         dyn_cost_trim = dyn_cost[mask]
         gre_cost_trim = gre_cost[mask]
