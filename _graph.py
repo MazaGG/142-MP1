@@ -227,7 +227,7 @@ def plot_path(cities, path, color, algo, test_name, N_target):
     for i, (x, y) in enumerate(cities):
         ax.text(x + 1, y + 1, str(i), fontsize=8, color="black")
 
-    plt.title(f"{algo} TSP Path for N={N_target} — {test_name}")
+    plt.title(f"{algo} TSP Path for N={N_target}")
     plt.xlabel("X Coordinate")
     plt.ylabel("Y Coordinate")
     plt.legend()
@@ -241,12 +241,16 @@ def plot_path(cities, path, color, algo, test_name, N_target):
     print(f"✅ Saved → {output_file}")
 
 # === MAIN ===
-N_target = 10
+N_target = 10 # 25
 result_files = sorted(glob.glob("results/test*-results/results.txt"))
 os.makedirs("graphs", exist_ok=True)
 
 for file in result_files:
-    test_name = os.path.basename(os.path.dirname(file))
+    folder_name = os.path.basename(os.path.dirname(file))  # e.g., "test1-results"
+    
+    # Convert folder name → readable title
+    test_name = folder_name.replace("test", "Test ").replace("-results", "")
+    
     print(f"Processing {test_name}...")
 
     cities = extract_cities(file)
@@ -259,5 +263,5 @@ for file in result_files:
         except ValueError as e:
             print(f"⚠️ Skipping {algo} for {test_name}: {e}")
 
-print("🎯 Finished generating all test plots.")
+print("Finished generating all test plots.")
 
