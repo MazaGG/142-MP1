@@ -47,9 +47,9 @@ mask_gre_ext  = N > max_gre
 # --- Plot for small N ---
 plt.figure(figsize=(10, 6))
 
-plt.plot(N[:5], exhaustive[:5], "o", color="red", label="Exhaustive")
-plt.plot(N[:5], dynamic[:5], "o", color="blue", label="Dynamic")
-plt.plot(N[:5], greedy[:5], "o", color="green", label="Greedy")
+plt.plot(N[:6], exhaustive[:6], "o", color="red", label="Exhaustive")
+plt.plot(N[:6], dynamic[:6], "o", color="blue", label="Dynamic")
+plt.plot(N[:6], greedy[:6], "o", color="green", label="Greedy")
 
 plt.xlabel("Number of Cities (N)")
 plt.ylabel("Runtime (seconds)")
@@ -63,9 +63,9 @@ plt.show()
 # --- Plot for small N (zoomed in) ---
 plt.figure(figsize=(10, 6))
 
-plt.plot(N[:5], exhaustive[:5], "o", color="red", label="Exhaustive")
-plt.plot(N[:5], dynamic[:5], "o", color="blue", label="Dynamic")
-plt.plot(N[:5], greedy[:5], "o", color="green", label="Greedy")
+plt.plot(N[:6], exhaustive[:6], "o", color="red", label="Exhaustive")
+plt.plot(N[:6], dynamic[:6], "o", color="blue", label="Dynamic")
+plt.plot(N[:6], greedy[:6], "o", color="green", label="Greedy")
 
 plt.ylim(top=0.02)
 plt.xlabel("Number of Cities (N)")
@@ -107,7 +107,7 @@ plt.show()
 
 # --- Plot for large N (zoomed in) ---
 plt.figure(figsize=(10, 6))
-MAX_Y=25000
+MAX_Y=5000
 
 # Exhaustive (trimmed)
 mask_exh_meas_trim = (mask_exh_meas) & (exhaustive < MAX_Y)
