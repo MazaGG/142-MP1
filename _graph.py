@@ -62,19 +62,28 @@ plt.show()
 
 # --- Plot for small N (zoomed in) ---
 plt.figure(figsize=(10, 6))
+MAX_Y = 0.002 
 
-plt.plot(N[:6], exhaustive[:6], "o", color="red", label="Exhaustive")
-plt.plot(N[:6], dynamic[:6], "o", color="blue", label="Dynamic")
-plt.plot(N[:6], greedy[:6], "o", color="green", label="Greedy")
+# Exhaustive
+mask_exh = (N[:6] >= 5) & (exhaustive[:6] < MAX_Y)
+plt.plot(N[mask_exh], exhaustive[mask_exh], "o", color="red", label="Exhaustive")
 
-plt.ylim(top=0.02)
+# Dynamic
+mask_dyn = (N[:6] >= 5) & (dynamic[:6] < MAX_Y)
+plt.plot(N[mask_dyn], dynamic[mask_dyn], "o", color="blue", label="Dynamic")
+
+# Greedy
+mask_gre = (N[:6] >= 5) & (greedy[:6] < MAX_Y)
+plt.plot(N[mask_gre], greedy[mask_gre], "o", color="green", label="Greedy")
+
+plt.ylim(top=MAX_Y)
 plt.xlabel("Number of Cities (N)")
 plt.ylabel("Runtime (seconds)")
-plt.title("TSP Algorithm Runtime for Small N")
+plt.title("TSP Algorithm Runtime for Small N (Trimmed)")
 plt.legend()
 plt.grid(True, linestyle="--", alpha=0.6)
 plt.tight_layout()
-plt.savefig("graphs/small-n-zoomed.png", dpi=300)
+plt.savefig("graphs/small-n-trimmed.png", dpi=300)
 plt.show()
 
 # --- Plot for large N ---
@@ -107,7 +116,7 @@ plt.show()
 
 # --- Plot for large N (zoomed in) ---
 plt.figure(figsize=(10, 6))
-MAX_Y=5000
+MAX_Y=500
 
 # Exhaustive (trimmed)
 mask_exh_meas_trim = (mask_exh_meas) & (exhaustive < MAX_Y)
