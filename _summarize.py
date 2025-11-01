@@ -87,7 +87,7 @@ with open("results.txt", "w") as f:
             f,
             table,
             header="N Test1 Test2 Test3 AvgRuntime AvgCost",
-            fmt=["%d", "%.6f", "%.6f", "%.6f", "%.6f", "%.3f"],
+            fmt=["%d", "%.2f", "%.2f", "%.2f", "%.6f", "%.2f"],
             comments=""
         )
         f.write("\n\n")
@@ -123,8 +123,8 @@ with open("results.txt", "w") as f:
         np.savetxt(
             f,
             summary_cost,
-            header="N Dynamic_Cost Greedy_Cost Percent_Error(%)",
-            fmt=["%d", "%.3f", "%.3f", "%.2f"],
+            header="N Exact_Cost Greedy_Cost Percent_Error(%)",
+            fmt=["%d", "%.2f", "%.2f", "%.2f"],
             comments=""
         )
         f.write("\n")

@@ -7,7 +7,7 @@ import time
 
 # Generate a set of test distance matrices
 cities = (np.random.randint(0, 100, (30, 2)))
-D = np.round(np.linalg.norm(cities[:, np.newaxis] - cities[np.newaxis, :], axis=-1))
+D = np.linalg.norm(cities[:, np.newaxis] - cities[np.newaxis, :], axis=-1)
 
 # Test Exhaustive Search
 print("# Exhaustive Search\n")
@@ -18,7 +18,7 @@ for i in range(4,10):
   cost, path = tsp_exhaustive(D[:i+1, :i+1])
   end = time.time()
   exhaustive_results.append([i+1, end-start, cost, path]) 
-  print(f"N={i+1}, Runtime={end-start:.6f}s, Cost={cost}, Path={path}")
+  print(f"N={i+1}, Runtime={end-start:.6f}s, Cost={cost:.2f}, Path={path}")
 print("\n")
 
 # Test Dynamic Programming
@@ -30,7 +30,7 @@ for i in range(4,15):
   cost, path = tsp_dynamic(D[:i+1, :i+1])
   end = time.time()
   dynamic_results.append([i+1, end-start, cost, path]) 
-  print(f"N={i+1}, Runtime={end-start:.6f}s, Cost={cost}, Path={path}")
+  print(f"N={i+1}, Runtime={end-start:.6f}s, Cost={cost:.2f}, Path={path}")
 print("\n")
 
 # Test Greedy Algorithm
@@ -42,7 +42,7 @@ for i in range(4,20):
   cost, path = tsp_greedy(D[:i+1, :i+1])
   end = time.time()
   greedy_results.append([i+1, end-start, cost, path]) 
-  print(f"N={i+1}, Runtime={end-start:.6f}s, Cost={cost}, Path={path}")
+  print(f"N={i+1}, Runtime={end-start:.6f}s, Cost={cost:.2f}, Path={path}")
 print("\n")
 
 # Save Results to File
@@ -51,21 +51,21 @@ with open("results.txt", "w") as f:
     np.savetxt(f, cities, fmt="%d")
 
     f.write("\n# Distance Matrix D\n")
-    np.savetxt(f, D, fmt="%d")
+    np.savetxt(f, D, fmt="%.2f")
 
     f.write("\n# Exhaustive Results\n")
     for row in exhaustive_results:
         N, runtime, cost, path = row
-        f.write(f"{N} {runtime:.6f} {cost:.6f} {path}\n")
+        f.write(f"{N} {runtime:.6f} {cost:.2f} {path}\n")
 
     f.write("\n# Dynamic Results\n")
     for row in dynamic_results:
         N, runtime, cost, path = row
-        f.write(f"{N} {runtime:.6f} {cost:.6f} {path}\n")
+        f.write(f"{N} {runtime:.6f} {cost:.2f} {path}\n")
 
     f.write("\n# Greedy Results\n")
     for row in greedy_results:
         N, runtime, cost, path = row
-        f.write(f"{N} {runtime:.6f} {cost:.6f} {path}\n")
+        f.write(f"{N} {runtime:.6f} {cost:.2f} {path}\n")
 print("Results saved to results.txt")
 
