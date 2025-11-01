@@ -135,19 +135,21 @@ with open("results.txt", "w") as f:
 
     # Cost Comparison
     if "Dynamic" in cost_per_algo and "Greedy" in cost_per_algo:
-        dyn_cost = cost_per_algo["Dynamic"][:, 1]
-        gre_cost = cost_per_algo["Greedy"][:, 1]
-        N = cost_per_algo["Dynamic"][:, 0]
+        dyn_table = cost_per_algo["Dynamic"]
+        gre_table = cost_per_algo["Greedy"]
 
-        mask = N <= 10
-        N_trim = N[mask]
-        dyn_cost_trim = dyn_cost[mask]
-        gre_cost_trim = gre_cost[mask]
+        common_N = np.intersect1d(dyn_table[:, 0], gre_table[:, 0])
 
-        percent_error = (gre_cost_trim - dyn_cost_trim) / dyn_cost_trim * 100
+        mask = (common_N >= 5) & (common_N <= 10)
+        common_N = common_N[mask]
 
-        f.write("# Summary (Average Cost Comparison)\n")
-        summary_cost = np.column_stack([N_trim, dyn_cost_trim, gre_cost_trim, percent_error])
+        dyn_cost_aligned = np.array([dyn_table[dyn_table[:, 0] == n, 1][0] for n in common_N])
+        gre_cost_aligned = np.array([gre_table[gre_table[:, 0] == n, 1][0] for n in common_N])
+
+        percent_error = (gre_cost_aligned - dyn_cost_aligned) / dyn_cost_aligned * 100
+
+        f.write("# Summary (Average Cost Comparison for N = 5–10)\n")
+        summary_cost = np.column_stack([common_N, dyn_cost_aligned, gre_cost_aligned, percent_error])
         np.savetxt(
             f,
             summary_cost,
