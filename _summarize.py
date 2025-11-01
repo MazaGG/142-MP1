@@ -105,9 +105,9 @@ with open("results.txt", "w") as f:
         N_gre, T_gre = avg_per_algo["Greedy"][:, 0], avg_per_algo["Greedy"][:, 1]
 
         # Step 2: fit models for extrapolation
-        a_exh, f_exh = fit_model(N_exh, T_exh, lambda n: np.array([math.factorial(int(x)) for x in n]))
-        a_dyn, f_dyn = fit_model(N_dyn, T_dyn, lambda n: n**2 * (2**n))
-        a_gre, f_gre = fit_model(N_gre, T_gre, lambda n: n**2)
+        a_exh, f_exh = fit_model(N_exh, T_exh, lambda n: np.array([math.factorial(int(x)) for x in np.asarray(n)]))
+        a_dyn, f_dyn = fit_model(N_dyn, T_dyn, lambda n: np.asarray(n)**2 * (2**np.asarray(n)))
+        a_gre, f_gre = fit_model(N_gre, T_gre, lambda n: np.asarray(n)**2)
 
         # Step 3: extend up to N = 30
         N_full = np.arange(4, 31)

@@ -32,9 +32,9 @@ def extract_summary(filename):
 N, exhaustive, dynamic, greedy = extract_summary("results.txt")
 
 # Known measured limits
-max_exh = 15
-max_dyn = 20
-max_gre = 30 
+max_exh = 10
+max_dyn = 15
+max_gre = 20 
 
 # Split measured vs extrapolated regions
 mask_exh_meas = N <= max_exh
