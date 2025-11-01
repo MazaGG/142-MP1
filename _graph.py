@@ -71,11 +71,11 @@ plt.plot(N[:6][(greedy[:6] < MAX_Y)], greedy[:6][(greedy[:6] < MAX_Y)], "o", col
 plt.ylim(top=MAX_Y)
 plt.xlabel("Number of Cities (N)")
 plt.ylabel("Runtime (seconds)")
-plt.title("TSP Algorithm Runtime for Small N (Trimmed)")
+plt.title("TSP Algorithm Runtime for Small N (Zoomed In)")
 plt.legend()
 plt.grid(True, linestyle="--", alpha=0.6)
 plt.tight_layout()
-plt.savefig("graphs/small-n-trimmed.png", dpi=300)
+plt.savefig("graphs/small-n-zoomed.png", dpi=300)
 plt.show()
 
 # --- Plot for large N ---
@@ -108,7 +108,7 @@ plt.show()
 
 # --- Plot for large N (zoomed in) ---
 plt.figure(figsize=(10, 6))
-MAX_Y=500
+MAX_Y=50
 
 # Exhaustive (trimmed)
 mask_exh_meas_trim = (mask_exh_meas) & (exhaustive < MAX_Y)
@@ -132,12 +132,13 @@ plt.plot(N[mask_gre_ext_trim],  greedy[mask_gre_ext_trim],  "o", color="lime", l
 plt.ylim(top=MAX_Y)
 plt.xlabel("Number of Cities (N)")
 plt.ylabel("Runtime (seconds)")
-plt.title("TSP Algorithm Runtime for Large N (Trimmed)")
+plt.title("TSP Algorithm Runtime for Large N (Zoomed In)")
 plt.legend()
 plt.grid(True, linestyle="--", alpha=0.6)
 plt.tight_layout()
 plt.savefig("graphs/large-n-zoomed.png", dpi=300)
 plt.show()
+
 # --- Plot for large N (log scale) ---
 plt.figure(figsize=(10, 6))
 plt.plot(N[mask_exh_meas], exhaustive[mask_exh_meas], "o", color="red", label="Exhaustive (measured)")
