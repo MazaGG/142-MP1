@@ -151,7 +151,7 @@ with open("results.txt", "w") as f:
         gre_N, gre_costs = gre_data[:, 0], gre_data[:, 2]
         common_N = np.intersect1d(dyn_N, gre_N)
 
-        mask = (common_N >= 5) & (common_N <= 10)
+        mask = (common_N >= 5) & (common_N <= 25)
         common_N = common_N[mask]
 
         dyn_costs_aligned = np.array([dyn_costs[dyn_N == n][0] for n in common_N])

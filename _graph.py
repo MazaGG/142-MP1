@@ -102,9 +102,9 @@ def plot_path(cities, path, color, algo, test_name, N_target):
 N, exhaustive, dynamic, greedy = extract_summary("results.txt")
 
 # Define maximum N for measured data
-max_exh = 10
-max_dyn = 15
-max_gre = 20 
+max_exh = 13
+max_dyn = 25
+max_gre = 30 
 
 # Split measured vs extrapolated regions
 mask_exh_meas = N <= max_exh
@@ -217,8 +217,8 @@ for file in result_files:
 
 print("Finished generating all test plots.")
 
-# Plot of paths for each test case (N = 15)
-N_target = 15
+# Plot of paths for each test case (N = 25)
+N_target = 25
 result_files = sorted(glob.glob("results/test*-results/results.txt"))
 os.makedirs("graphs", exist_ok=True)
 
