@@ -33,7 +33,7 @@ N, exhaustive, dynamic, greedy = extract_summary("results.txt")
 
 # Known measured limits
 max_exh = 15
-max_dyn = 25
+max_dyn = 20
 max_gre = 30 
 
 # Split measured vs extrapolated regions

@@ -24,7 +24,7 @@ print("\n")
 # Test Dynamic Programming
 print("\n# Dynamic Programming\n")
 dynamic_results = []
-for i in range(4,25):
+for i in range(4,20):
   start = time.time()
   cost, path = tsp_dynamic(D[:i+1, :i+1])
   end = time.time()

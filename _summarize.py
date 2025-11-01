@@ -111,9 +111,32 @@ with open("results.txt", "w") as f:
 
         # Step 3: extend up to N = 30
         N_full = np.arange(4, 31)
-        exh_full = np.array([f_exh([n])[0] if n > max(N_exh) else T_exh[n - N_exh[0]] for n in N_full])
-        dyn_full = np.array([f_dyn([n])[0] if n > max(N_dyn) else T_dyn[n - N_dyn[0]] for n in N_full])
-        gre_full = np.array([f_gre([n])[0] if n > max(N_gre) else T_gre[n - N_gre[0]] for n in N_full])
+        exh_full = []
+        dyn_full = []
+        gre_full = []
+
+        for n in N_full:
+            # Exhaustive
+            if n in N_exh:
+                exh_full.append(T_exh[N_exh == n][0])
+            else:
+                exh_full.append(f_exh([n])[0])
+
+            # Dynamic
+            if n in N_dyn:
+                dyn_full.append(T_dyn[N_dyn == n][0])
+            else:
+                dyn_full.append(f_dyn([n])[0])
+
+            # Greedy
+            if n in N_gre:
+                gre_full.append(T_gre[N_gre == n][0])
+            else:
+                gre_full.append(f_gre([n])[0])
+
+        exh_full = np.array(exh_full)
+        dyn_full = np.array(dyn_full)
+        gre_full = np.array(gre_full)
 
         # Step 4: write combined summary
         summary_table = np.column_stack((N_full, exh_full, dyn_full, gre_full))
