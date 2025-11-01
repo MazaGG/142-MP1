@@ -21,7 +21,7 @@ def tsp_dynamic(D):
                         DP[next_mask][v] = new_cost
                         parent[next_mask][v] = u  # record previous city
 
-    # Final step: close the tour (return to city 0)
+    # close the tour (return to city 0)
     all_visited = (1 << n) - 1
     min_cost = np.inf
     last_city = -1
@@ -40,7 +40,7 @@ def tsp_dynamic(D):
     for i in range(n - 1, 0, -1):
         path[i] = current
         prev = parent[mask][current]
-        mask = mask ^ (1 << current)  # remove current from mask
+        mask = mask ^ (1 << current)
         current = prev
 
     path[0] = 0  # start city
