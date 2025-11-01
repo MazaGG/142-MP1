@@ -78,12 +78,10 @@ with open("results.txt", "w") as f:
         runtimes = stacked[:, 1, :]
         costs = stacked[:, 2, :]
         avg_runtime = np.mean(runtimes, axis=1)
-        avg_cost = np.mean(costs, axis=1)
 
         avg_per_algo[algo] = np.column_stack((N_values, avg_runtime))
-        cost_per_algo[algo] = np.column_stack((N_values, avg_cost))
 
-        table = np.column_stack((N_values, runtimes, avg_runtime, avg_cost))
+        table = np.column_stack((N_values, runtimes, avg_runtime))
         f.write(f"# {algo} Summary\n")
         np.savetxt(
             f,
@@ -160,7 +158,7 @@ with open("results.txt", "w") as f:
         percent_error = (gre_costs_aligned - dyn_costs_aligned) / dyn_costs_aligned * 100
         percent_errors_all.append(percent_error)
 
-        f.write(f"# Test {test_idx} Cost Comparison (N = 5–10)\n")
+        f.write(f"# Test {test_idx} Cost Comparison (N = 5–25)\n")
         summary_cost = np.column_stack([common_N, dyn_costs_aligned, gre_costs_aligned, percent_error])
         np.savetxt(
             f,
