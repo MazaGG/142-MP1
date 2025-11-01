@@ -1,7 +1,11 @@
+# Traveling Salesman Problem using Greedy Algorithm (Nearest Neighbor)
+# References:
+# - https://youtu.be/RQpFffcI-ZI?si=baHRkECt97xX4WnV
+# - https://medium.com/@suryabhagavanchakkapalli/solving-the-traveling-salesman-problem-in-python-using-the-nearest-neighbor-algorithm-48fcf8db289a
+
 def tsp_greedy(D):
   n = len(D)
   
-  # A list to keep track of which cities have been visited.
   # Start by marking city 0 as visited.
   visited = [False] * n
   visited[0] = True
@@ -15,7 +19,7 @@ def tsp_greedy(D):
   # Need to visit n-1 more cities
   for _ in range(n - 1):
     
-    # Set the 'nearest_dist' to infinity at the *start* of each
+    # Set the 'nearest_dist' to infinity at the start of each
     # search for the next city. This guarantees that the first
     # unvisited city checked will be "nearer" than infinity.
     nearest_dist = float('inf')
@@ -42,5 +46,4 @@ def tsp_greedy(D):
   total_cost += D[current_city][0]
   path.append(0)
   
-  # Return the final cost and the path taken
   return total_cost, path
