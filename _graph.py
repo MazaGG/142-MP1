@@ -164,6 +164,12 @@ plt.tight_layout()
 plt.savefig("graphs/large-n-logscale.png", dpi=300)
 plt.show()
 
+import numpy as np
+import matplotlib.pyplot as plt
+import glob
+import os
+import ast
+
 # === Extract city coordinates ===
 def extract_cities(filename):
     """Reads city coordinates (X Y) from the file until # Distance Matrix."""
@@ -180,7 +186,6 @@ def extract_cities(filename):
         if len(parts) == 2 and all(p.replace('.', '', 1).isdigit() for p in parts):
             cities.append(list(map(float, parts)))
     return np.array(cities)
-
 
 # === Extract path for given algorithm & N ===
 def extract_path(filename, algo, N_target):
@@ -211,15 +216,29 @@ def extract_path(filename, algo, N_target):
             continue
     raise ValueError(f"No path found for N={N_target} in {algo} of {filename}")
 
-
 # === Plotting helper ===
-def plot_path(ax, cities, path, color, label):
-    """Plot one TSP path on given axes."""
+def plot_path(cities, path, color, algo, test_name, N_target):
+    """Plot one TSP path and save it."""
+    plt.figure(figsize=(8, 6))
+    ax = plt.gca()
+
     ordered = cities[path]
-    ax.plot(ordered[:, 0], ordered[:, 1], "-o", color=color, label=label)
+    ax.plot(ordered[:, 0], ordered[:, 1], "-o", color=color, label=f"{algo} Path")
     for i, (x, y) in enumerate(cities):
         ax.text(x + 1, y + 1, str(i), fontsize=8, color="black")
 
+    plt.title(f"{algo} TSP Path for N={N_target} — {test_name}")
+    plt.xlabel("X Coordinate")
+    plt.ylabel("Y Coordinate")
+    plt.legend()
+    plt.grid(True, linestyle="--", alpha=0.6)
+    plt.tight_layout()
+
+    os.makedirs("graphs", exist_ok=True)
+    output_file = f"graphs/{test_name}-{algo.lower()}-path.png"
+    plt.savefig(output_file, dpi=300)
+    plt.close()
+    print(f"✅ Saved → {output_file}")
 
 # === MAIN ===
 N_target = 10
@@ -233,32 +252,12 @@ for file in result_files:
     cities = extract_cities(file)
     cities_n = cities[:N_target]
 
-    try:
-        dynamic_path = extract_path(file, "Dynamic", N_target)
-        greedy_path = extract_path(file, "Greedy", N_target)
-    except ValueError as e:
-        print(f"Skipping {test_name}: {e}")
-        continue
+    for algo, color in [("Dynamic", "blue"), ("Greedy", "green")]:
+        try:
+            path = extract_path(file, algo, N_target)
+            plot_path(cities_n, path, color, algo, test_name, N_target)
+        except ValueError as e:
+            print(f"⚠️ Skipping {algo} for {test_name}: {e}")
 
-    # Plot for this test
-    plt.figure(figsize=(8, 6))
-    ax = plt.gca()
-
-    plot_path(ax, cities_n, dynamic_path, "blue", "Dynamic")
-    plot_path(ax, cities_n, greedy_path, "green", "Greedy")
-
-    plt.title(f"TSP Paths for N={N_target} — {test_name}")
-    plt.xlabel("X Coordinate")
-    plt.ylabel("Y Coordinate")
-    plt.legend()
-    plt.grid(True, linestyle="--", alpha=0.6)
-    plt.tight_layout()
-
-    output_file = f"graphs/{test_name}-n{N_target}-path.png"
-    plt.savefig(output_file, dpi=300)
-    plt.close()
-
-    print(f"Saved plot → {output_file}")
-
-print("✅ Finished generating all test plots.")
+print("🎯 Finished generating all test plots.")
 
