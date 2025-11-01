@@ -93,7 +93,7 @@ def plot_path(cities, path, color, algo, test_name, N_target):
     plt.tight_layout()
 
     os.makedirs("graphs", exist_ok=True)
-    output_file = f"graphs/{test_name}-{algo.lower()}-path.png"
+    output_file = f"graphs/{test_name}-{algo.lower()}-path-N{N_target}.png"
     plt.savefig(output_file, dpi=300)
     plt.close()
     print(f"Saved → {output_file}")
@@ -195,8 +195,8 @@ plt.tight_layout()
 plt.savefig("graphs/large-n-logscale.png", dpi=300)
 plt.show()
 
-# Plot of paths for each test case
-N_target = 10 # 25
+# Plot of paths for each test case (N = 10)
+N_target = 10 
 result_files = sorted(glob.glob("results/test*-results/results.txt"))
 os.makedirs("graphs", exist_ok=True)
 
@@ -217,3 +217,24 @@ for file in result_files:
 
 print("Finished generating all test plots.")
 
+# Plot of paths for each test case (N = 15)
+N_target = 15
+result_files = sorted(glob.glob("results/test*-results/results.txt"))
+os.makedirs("graphs", exist_ok=True)
+
+for file in result_files:
+    folder_name = os.path.basename(os.path.dirname(file)) 
+    test_name = folder_name.replace("test", "Test ").replace("-results", "")
+    print(f"Processing {test_name}...")
+
+    cities = extract_cities(file)
+    cities_n = cities[:N_target]
+
+    for algo, color in [("Dynamic", "blue"), ("Greedy", "green")]:
+        try:
+            path = extract_path(file, algo, N_target)
+            plot_path(cities_n, path, color, algo, test_name, N_target)
+        except ValueError as e:
+            print(f"Skipping {algo} for {test_name}: {e}")
+
+print("Finished generating all test plots.")
