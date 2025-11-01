@@ -107,33 +107,36 @@ plt.show()
 
 # --- Plot for large N (zoomed in) ---
 plt.figure(figsize=(10, 6))
+MAX_Y=100000
 
-# Exhaustive
-plt.plot(N[mask_exh_meas], exhaustive[mask_exh_meas], "o", color="red", label="Exhaustive (measured)")
-if np.any(mask_exh_ext):
-    plt.plot(N[mask_exh_ext], exhaustive[mask_exh_ext], "o", color="maroon", label="Exhaustive (extrapolated)")
+# Exhaustive (trimmed)
+mask_exh_meas_trim = (mask_exh_meas) & (exhaustive < MAX_Y)
+mask_exh_ext_trim  = (mask_exh_ext)  & (exhaustive < MAX_Y)
+plt.plot(N[mask_exh_meas_trim], exhaustive[mask_exh_meas_trim], "o", color="red", label="Exhaustive (measured)")
+plt.plot(N[mask_exh_ext_trim],  exhaustive[mask_exh_ext_trim],  "o", color="maroon", label="Exhaustive (extrapolated)")
 
-# Dynamic
-plt.plot(N[mask_dyn_meas], dynamic[mask_dyn_meas], "o", color="blue", label="Dynamic (measured)")
-if np.any(mask_dyn_ext):
-    plt.plot(N[mask_dyn_ext], dynamic[mask_dyn_ext], "o", color="cyan", label="Dynamic (extrapolated)")
+# Dynamic (trimmed)
+mask_dyn_meas_trim = (mask_dyn_meas) & (dynamic < MAX_Y)
+mask_dyn_ext_trim  = (mask_dyn_ext)  & (dynamic < MAX_Y)
+plt.plot(N[mask_dyn_meas_trim], dynamic[mask_dyn_meas_trim], "o", color="blue", label="Dynamic (measured)")
+plt.plot(N[mask_dyn_ext_trim],  dynamic[mask_dyn_ext_trim],  "o", color="cyan", label="Dynamic (extrapolated)")
 
-# Greedy
-plt.plot(N[mask_gre_meas], greedy[mask_gre_meas], "o", color="green", label="Greedy (measured)")
-if np.any(mask_gre_ext):
-    plt.plot(N[mask_gre_ext], greedy[mask_gre_ext], "o", color="lime", label="Greedy (extrapolated)")
+# Greedy (trimmed)
+mask_gre_meas_trim = (mask_gre_meas) & (greedy < MAX_Y)
+mask_gre_ext_trim  = (mask_gre_ext)  & (greedy < MAX_Y)
+plt.plot(N[mask_gre_meas_trim], greedy[mask_gre_meas_trim], "o", color="green", label="Greedy (measured)")
+plt.plot(N[mask_gre_ext_trim],  greedy[mask_gre_ext_trim],  "o", color="lime", label="Greedy (extrapolated)")
 
 # Labels and styling
-plt.ylim(top=100000)
+plt.ylim(top=MAX_Y)
 plt.xlabel("Number of Cities (N)")
 plt.ylabel("Runtime (seconds)")
-plt.title("TSP Algorithm Runtime for Large N")
+plt.title("TSP Algorithm Runtime for Large N (Trimmed)")
 plt.legend()
 plt.grid(True, linestyle="--", alpha=0.6)
 plt.tight_layout()
-plt.savefig("graphs/large-n.png", dpi=300)
+plt.savefig("graphs/large-n-zoomed.png", dpi=300)
 plt.show()
-
 # --- Plot for large N (log scale) ---
 plt.figure(figsize=(10, 6))
 plt.plot(N[mask_exh_meas], exhaustive[mask_exh_meas], "o", color="red", label="Exhaustive (measured)")
