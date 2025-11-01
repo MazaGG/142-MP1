@@ -47,9 +47,9 @@ mask_gre_ext  = N > max_gre
 # --- Plot for small N ---
 plt.figure(figsize=(10, 6))
 
-plt.plot(N[:10], exhaustive[:10], "o", color="red", label="Exhaustive")
-plt.plot(N[:10], dynamic[:10], "o", color="blue", label="Dynamic")
-plt.plot(N[:10], greedy[:10], "o", color="green", label="Greedy")
+plt.plot(N[:5], exhaustive[:5], "o", color="red", label="Exhaustive")
+plt.plot(N[:5], dynamic[:5], "o", color="blue", label="Dynamic")
+plt.plot(N[:5], greedy[:5], "o", color="green", label="Greedy")
 
 plt.xlabel("Number of Cities (N)")
 plt.ylabel("Runtime (seconds)")
@@ -60,19 +60,21 @@ plt.tight_layout()
 plt.savefig("graphs/small-n.png", dpi=300)
 plt.show()
 
-# --- Plot for small N w/o exhaustive ---
+# --- Plot for small N (zoomed in) ---
 plt.figure(figsize=(10, 6))
 
-plt.plot(N[:10], dynamic[:10], "o", color="blue", label="Dynamic")
-plt.plot(N[:10], greedy[:10], "o", color="green", label="Greedy")
+plt.plot(N[:5], exhaustive[:5], "o", color="red", label="Exhaustive")
+plt.plot(N[:5], dynamic[:5], "o", color="blue", label="Dynamic")
+plt.plot(N[:5], greedy[:5], "o", color="green", label="Greedy")
 
+plt.ylim(top=0.02)
 plt.xlabel("Number of Cities (N)")
 plt.ylabel("Runtime (seconds)")
 plt.title("TSP Algorithm Runtime for Small N")
 plt.legend()
 plt.grid(True, linestyle="--", alpha=0.6)
 plt.tight_layout()
-plt.savefig("graphs/small-n2.png", dpi=300)
+plt.savefig("graphs/small-n-zoomed.png", dpi=300)
 plt.show()
 
 # --- Plot for large N ---
@@ -96,7 +98,36 @@ if np.any(mask_gre_ext):
 # Labels and styling
 plt.xlabel("Number of Cities (N)")
 plt.ylabel("Runtime (seconds)")
-plt.title("TSP Algorithm Runtime Growth")
+plt.title("TSP Algorithm Runtime for Large N")
+plt.legend()
+plt.grid(True, linestyle="--", alpha=0.6)
+plt.tight_layout()
+plt.savefig("graphs/large-n.png", dpi=300)
+plt.show()
+
+# --- Plot for large N (zoomed in) ---
+plt.figure(figsize=(10, 6))
+
+# Exhaustive
+plt.plot(N[mask_exh_meas], exhaustive[mask_exh_meas], "o", color="red", label="Exhaustive (measured)")
+if np.any(mask_exh_ext):
+    plt.plot(N[mask_exh_ext], exhaustive[mask_exh_ext], "o", color="maroon", label="Exhaustive (extrapolated)")
+
+# Dynamic
+plt.plot(N[mask_dyn_meas], dynamic[mask_dyn_meas], "o", color="blue", label="Dynamic (measured)")
+if np.any(mask_dyn_ext):
+    plt.plot(N[mask_dyn_ext], dynamic[mask_dyn_ext], "o", color="cyan", label="Dynamic (extrapolated)")
+
+# Greedy
+plt.plot(N[mask_gre_meas], greedy[mask_gre_meas], "o", color="green", label="Greedy (measured)")
+if np.any(mask_gre_ext):
+    plt.plot(N[mask_gre_ext], greedy[mask_gre_ext], "o", color="lime", label="Greedy (extrapolated)")
+
+# Labels and styling
+plt.ylim(top=100000)
+plt.xlabel("Number of Cities (N)")
+plt.ylabel("Runtime (seconds)")
+plt.title("TSP Algorithm Runtime for Large N")
 plt.legend()
 plt.grid(True, linestyle="--", alpha=0.6)
 plt.tight_layout()
@@ -118,7 +149,7 @@ if np.any(mask_gre_ext):
 plt.yscale("log")
 plt.xlabel("Number of Cities (N)")
 plt.ylabel("Runtime (log scale)")
-plt.title("TSP Algorithm Runtime Growth (Log Scale)")
+plt.title("TSP Algorithm Runtime for Large N (Log Scale)")
 plt.legend()
 plt.grid(True, linestyle="--", alpha=0.6)
 plt.tight_layout()
