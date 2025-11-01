@@ -133,23 +133,35 @@ with open("results.txt", "w") as f:
     )
     f.write("\n")
 
-    # Cost Comparison
-    if "Dynamic" in cost_per_algo and "Greedy" in cost_per_algo:
-        dyn_table = cost_per_algo["Dynamic"]
-        gre_table = cost_per_algo["Greedy"]
+    # Cost Comparison per Test
+    test_files = sorted(glob.glob("results/test*-results/results.txt"))
+    percent_errors_all = []
 
-        common_N = np.intersect1d(dyn_table[:, 0], gre_table[:, 0])
+    for test_idx, file in enumerate(test_files, start=1):
+        print(f"Processing cost summary for {file}...")
+
+        dyn_data = extract_results(file, "# Dynamic Results")
+        gre_data = extract_results(file, "# Greedy Results")
+
+        if dyn_data is None or gre_data is None:
+            print(f"Skipping {file}: missing data.")
+            continue
+
+        dyn_N, dyn_costs = dyn_data[:, 0], dyn_data[:, 2]
+        gre_N, gre_costs = gre_data[:, 0], gre_data[:, 2]
+        common_N = np.intersect1d(dyn_N, gre_N)
 
         mask = (common_N >= 5) & (common_N <= 10)
         common_N = common_N[mask]
 
-        dyn_cost_aligned = np.array([dyn_table[dyn_table[:, 0] == n, 1][0] for n in common_N])
-        gre_cost_aligned = np.array([gre_table[gre_table[:, 0] == n, 1][0] for n in common_N])
+        dyn_costs_aligned = np.array([dyn_costs[dyn_N == n][0] for n in common_N])
+        gre_costs_aligned = np.array([gre_costs[gre_N == n][0] for n in common_N])
 
-        percent_error = (gre_cost_aligned - dyn_cost_aligned) / dyn_cost_aligned * 100
+        percent_error = (gre_costs_aligned - dyn_costs_aligned) / dyn_costs_aligned * 100
+        percent_errors_all.append(percent_error)
 
-        f.write("# Summary (Average Cost Comparison for N = 5–10)\n")
-        summary_cost = np.column_stack([common_N, dyn_cost_aligned, gre_cost_aligned, percent_error])
+        f.write(f"# Test {test_idx} Cost Comparison (N = 5–10)\n")
+        summary_cost = np.column_stack([common_N, dyn_costs_aligned, gre_costs_aligned, percent_error])
         np.savetxt(
             f,
             summary_cost,
@@ -158,5 +170,21 @@ with open("results.txt", "w") as f:
             comments=""
         )
         f.write("\n")
+
+    # Average %Error Across All Tests
+    if percent_errors_all:
+        avg_error = np.mean(np.vstack(percent_errors_all), axis=0)
+        avg_N = common_N 
+        f.write("# Average Percent Error Across Tests\n")
+        avg_table = np.column_stack([avg_N, avg_error])
+        np.savetxt(
+            f,
+            avg_table,
+            header="N Average_%Error",
+            fmt=["%d", "%.2f"],
+            comments=""
+        )
+        f.write("\n")
+
 
 print("Finished writing results.txt with runtime extrapolated to N=30 and cost summary up to N=25")
