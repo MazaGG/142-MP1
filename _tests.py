@@ -2,7 +2,6 @@ from algorithms.exhaustive import tsp_exhaustive
 from algorithms.dynamic import tsp_dynamic
 from algorithms.greedy import tsp_greedy
 
-from tabulate import tabulate
 import numpy as np
 import time
 
