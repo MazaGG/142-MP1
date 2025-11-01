@@ -29,14 +29,14 @@ def extract_results(filename, section):
             continue
     return np.array(data)
 
-# Function to fit model
+
+# Function to fit model and extrapolate
 def fit_model(N, T, model_fn):
     f = model_fn(N)
     a, *_ = np.linalg.lstsq(f[:, None], T, rcond=None)
     a = float(a[0])
     return a, lambda n: a * model_fn(n)
 
-# Save summarized results to results.txt
 files = sorted(glob.glob("results/**/results.txt", recursive=True))
 print("Found files:", files)
 
@@ -57,11 +57,13 @@ for name, section in sections.items():
         else:
             print(f"Warning: no data found for {name} in {file}")
 
+# Output File 
 with open("results.txt", "w") as f:
     avg_per_algo = {}
     cost_per_algo = {}
     wrote_anything = False
 
+    # Summary per Algorithm
     for algo, datasets in algorithm_data.items():
         if not datasets:
             f.write(f"# {algo} Summary\nNo data found.\n\n")
@@ -87,39 +89,65 @@ with open("results.txt", "w") as f:
             f,
             table,
             header="N Test1 Test2 Test3 AvgRuntime AvgCost",
-            fmt=["%d", "%.2f", "%.2f", "%.2f", "%.6f", "%.2f"],
+            fmt=["%d", "%.6f", "%.6f", "%.6f", "%.6f", "%.2f"],
             comments=""
         )
         f.write("\n\n")
 
-    # Runtime summary
-    if avg_per_algo:
-        f.write("# Summary (Average Runtime per Algorithm)\n")
-        N = avg_per_algo["Exhaustive"][:, 0]
-        summary_table = np.column_stack([
-            N,
-            avg_per_algo["Exhaustive"][:, 1],
-            avg_per_algo["Dynamic"][:, 1],
-            avg_per_algo["Greedy"][:, 1],
-        ])
-        np.savetxt(
-            f,
-            summary_table,
-            header="N Exhaustive Dynamic Greedy",
-            fmt=["%d", "%.6f", "%.6f", "%.6f"],
-            comments=""
-        )
-        f.write("\n")
+    f.write("# Summary (Average Runtime per Algorithm)\n")
 
-    # Cost summary
+    N_max = 30
+    all_N = np.arange(5, N_max + 1)
+
+    models = {
+        "Exhaustive": lambda n: np.array([math.factorial(int(x)) for x in n]),
+        "Dynamic": lambda n: np.array([x**2 * (2**x) for x in n]),
+        "Greedy": lambda n: np.array([x**2 for x in n])
+    }
+
+    extrapolated = {}
+
+    for algo in ["Exhaustive", "Dynamic", "Greedy"]:
+        if algo not in avg_per_algo:
+            continue
+
+        N = avg_per_algo[algo][:, 0]
+        T = avg_per_algo[algo][:, 1]
+        model_fn = models[algo]
+        a, f_model = fit_model(N, T, model_fn)
+        extrapolated[algo] = f_model(all_N)
+
+    summary_table = np.column_stack([
+        all_N,
+        extrapolated["Exhaustive"],
+        extrapolated["Dynamic"],
+        extrapolated["Greedy"]
+    ])
+
+    np.savetxt(
+        f,
+        summary_table,
+        header="N Exhaustive Dynamic Greedy",
+        fmt=["%d", "%.6f", "%.6f", "%.6f"],
+        comments=""
+    )
+    f.write("\n")
+
+    # Cost Comparison
     if "Dynamic" in cost_per_algo and "Greedy" in cost_per_algo:
         dyn_cost = cost_per_algo["Dynamic"][:, 1]
         gre_cost = cost_per_algo["Greedy"][:, 1]
         N = cost_per_algo["Dynamic"][:, 0]
-        percent_error = (gre_cost - dyn_cost) / dyn_cost * 100
+
+        mask = N <= 15
+        N_trim = N[mask]
+        dyn_cost_trim = dyn_cost[mask]
+        gre_cost_trim = gre_cost[mask]
+
+        percent_error = (gre_cost_trim - dyn_cost_trim) / dyn_cost_trim * 100
 
         f.write("# Summary (Average Cost Comparison)\n")
-        summary_cost = np.column_stack([N, dyn_cost, gre_cost, percent_error])
+        summary_cost = np.column_stack([N_trim, dyn_cost_trim, gre_cost_trim, percent_error])
         np.savetxt(
             f,
             summary_cost,
@@ -129,4 +157,4 @@ with open("results.txt", "w") as f:
         )
         f.write("\n")
 
-print("Finished writing results.txt with runtime + cost summaries")
+print("Finished writing results.txt with runtime extrapolated to N=30 and cost summary up to N=25")
