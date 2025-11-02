@@ -86,8 +86,8 @@ with open("results.txt", "w") as f:
         np.savetxt(
             f,
             table,
-            header="N Test1 Test2 Test3 AvgRuntime AvgCost",
-            fmt=["%d", "%.6f", "%.6f", "%.6f", "%.6f", "%.2f"],
+            header="N Test1 Test2 Test3 AvgRuntime",
+            fmt=["%d", "%.6f", "%.6f", "%.6f", "%.6f"],
             comments=""
         )
         f.write("\n\n")
